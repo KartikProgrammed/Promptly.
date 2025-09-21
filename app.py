@@ -1,11 +1,14 @@
 from flask import Flask, request, jsonify
 import requests
 import os
+from dotenv import load_dotenv
+
+# Load environment variables from .env file
+load_dotenv()
 
 app = Flask(__name__)
 
-# Ideally store this in env variable
-GEMINI_API_KEY = os.getenv("GEMINI_API_KEY", "AIzaSyBKUQJkxy7gmyuNrA5rBewY0pUdtrbkiaE")
+GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
 MODEL = "gemini-1.5-flash-latest"
 
 @app.route("/rewrite", methods=["POST"])
