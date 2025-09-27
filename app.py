@@ -39,7 +39,7 @@ def rewrite_prompt():
             "contents": [
                 {
                     "parts": [
-                        {"text": f"Rewrite the following user prompt to be more detailed, descriptive, and effective for an AI assistant. The rewritten prompt should be a single, continuous sentence without bullet points or newlines. Use the attached image as context. The original prompt is: {user_prompt}"},
+                        {"text": f"Rewrite the following user prompt to be more detailed, descriptive, and effective for an AI assistant. The rewritten prompt should be a single, continuous sentence without bullet points or newlines. Use the attached image as context. The original prompt is: {user_prompt}, do not use any special characters or symbols or bullets i just need plain white text with no formatting."},
                         {
                             "inlineData": {
                                 "mimeType": mime_type,
@@ -52,7 +52,7 @@ def rewrite_prompt():
         }
     else:
         # Text-only prompt: JSON payload
-        model = "models/gemma-3-27b-it"
+        model = "gemma-3-27b-it"
         data = request.json
         user_prompt = data.get("prompt", "")
 
@@ -62,8 +62,6 @@ def rewrite_prompt():
                 {"role": "user", "parts": [{"text": f"Rewrite the following user prompt to be more detailed, descriptive, and effective for an AI assistant. The rewritten prompt should be a single, continuous sentence without bullet points or newlines. The original prompt is: {user_prompt}"}]}
             ]
         }
-        url = f"https://generativelanguage.googleapis.com/v1beta/{model}:generateContent?key={GEMINI_API_KEY}"
-        print("Final URL being used:", url)
 
     # Make the API call only if a valid payload was created
     if payload:
@@ -72,8 +70,10 @@ def rewrite_prompt():
         
         try:
             response = requests.post(url, headers=headers, json=payload)
-            print("Text-only API Status Code:", response.status_code)
-            print("Text-only API Response Body:", response.text)
+            print("API Status Code:", response.status_code)
+            print("API Response Body:", response.text)
+            print("Request URL:", url)
+            print("Request Payload:", payload)
             result = response.json()
             
             # Extract the improved prompt from the API response
