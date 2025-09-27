@@ -20,7 +20,6 @@ def rewrite_prompt():
     with text and an image file).
     """
     improved_prompt = "Sorry, could not improve prompt."
-    model = "gemini-1.5-flash-latest"
     payload = None
 
     # Check if the request contains an image file
@@ -40,7 +39,7 @@ def rewrite_prompt():
             "contents": [
                 {
                     "parts": [
-                        {"text": f"Based on the following user text and image, provide a single, detailed, and highly effective prompt for an AI model to use for image generation or text response. Focus on descriptive language and specific details. Do not use any special bullets or new line characters. User text: {user_prompt}"},
+                        {"text": f"Rewrite the following user prompt to be more detailed, descriptive, and effective for an AI assistant. The rewritten prompt should be a single, continuous sentence without bullet points or newlines. Use the attached image as context. The original prompt is: {user_prompt}"},
                         {
                             "inlineData": {
                                 "mimeType": mime_type,
@@ -53,15 +52,18 @@ def rewrite_prompt():
         }
     else:
         # Text-only prompt: JSON payload
+        model = "models/gemma-3-27b-it"
         data = request.json
         user_prompt = data.get("prompt", "")
 
         # Construct the text-only payload
         payload = {
             "contents": [
-                {"role": "user", "parts": [{"text": f"Rewrite this prompt to be more effective for AI assistance: also do not use any special bullets or new line characters make a detailed prompt which suits the intuition\n\n{user_prompt}"}]}
+                {"role": "user", "parts": [{"text": f"Rewrite the following user prompt to be more detailed, descriptive, and effective for an AI assistant. The rewritten prompt should be a single, continuous sentence without bullet points or newlines. The original prompt is: {user_prompt}"}]}
             ]
         }
+        url = f"https://generativelanguage.googleapis.com/v1beta/{model}:generateContent?key={GEMINI_API_KEY}"
+        print("Final URL being used:", url)
 
     # Make the API call only if a valid payload was created
     if payload:
@@ -70,17 +72,24 @@ def rewrite_prompt():
         
         try:
             response = requests.post(url, headers=headers, json=payload)
+            print("Text-only API Status Code:", response.status_code)
+            print("Text-only API Response Body:", response.text)
             result = response.json()
             
             # Extract the improved prompt from the API response
             if "candidates" in result and len(result["candidates"]) > 0:
-                improved_prompt = result["candidates"][0]["content"]["parts"][0]["text"]
-                
-                # Clean up the output by removing newlines and excessive spaces
-                improved_prompt = improved_prompt.replace("\n", " ").strip()
-                improved_prompt = re.sub(r'\s+', ' ', improved_prompt)
+                candidate = result["candidates"][0]
+                if "content" in candidate and "parts" in candidate["content"] and len(candidate["content"]["parts"]) > 0:
+                    improved_prompt = candidate["content"]["parts"][0]["text"]
+                    
+                    # Clean up the output by removing newlines and excessive spaces
+                    improved_prompt = improved_prompt.replace("\n", " ").strip()
+                    improved_prompt = re.sub(r'\s+', ' ', improved_prompt)
         except (KeyError, IndexError, requests.exceptions.RequestException) as e:
-            print(f"API request failed: {e}")
+            # The more robust error handling was a good debugging tool.
+            # In a production app, you might re-implement more specific error
+            # handling or logging here.
+            pass
 
     return jsonify({"improved_prompt": improved_prompt})
 
