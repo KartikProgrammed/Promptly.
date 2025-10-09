@@ -166,5 +166,79 @@ def concise_reply():
 
     return jsonify({"concise_reply": reply})
 
+@app.route("/detailed", methods=["POST"])
+def detailed_reply():
+    """
+    Returns a detailed, long-form answer/solution. Accepts both text-only
+    prompts (JSON) and multimodal prompts (form-data with text and an image
+    file).
+    """
+    reply = "Sorry, could not generate a detailed reply."
+    payload = None
+
+    # Check if the request contains an image file
+    if 'image' in request.files:
+        # Multimodal prompt: an image and text prompt
+        image_file = request.files['image']
+        user_prompt = request.form.get("prompt", "")
+        model = "gemini-2.5-flash-preview-05-20"
+
+        # Read the image data and encode it in base64
+        image_data = image_file.read()
+        base64_image = base64.b64encode(image_data).decode('utf-8')
+        mime_type = image_file.mimetype
+
+        # Construct the multimodal payload for the Gemini API
+        payload = {
+            "contents": [
+                {
+                    "parts": [
+                        {"text": f"rewrite the below prompt such that when sent to an AI assistant it Provides a thorough, detailed, step-by-step explanation or solution. Cover assumptions, rationale, alternatives, and edge cases. Use clear, plain text in multiple sentences without bullet points, special characters, or markdown. Use the attached image as context if relevant. The user prompt is: {user_prompt}, generate only the prompt and no other text, do not use any special characters or symbols or bullets i just need plain white text with no formatting."},
+                        {
+                            "inlineData": {
+                                "mimeType": mime_type,
+                                "data": base64_image
+                            }
+                        }
+                    ]
+                }
+            ]
+        }
+    else:
+        # Text-only prompt: JSON payload
+        model = "gemma-3-27b-it"
+        data = request.json
+        user_prompt = data.get("prompt", "")
+
+        # Construct the text-only payload
+        payload = {
+            "contents": [
+                {"role": "user", "parts": [{"text": f"rewrite the below prompt such that when sent to an AI assistant it Provides a thorough, detailed, step-by-step explanation or solution. Cover assumptions, rationale, alternatives, and edge cases. Use clear, plain text in multiple sentences without bullet points, special characters, or markdown. Use the attached image as context if relevant. The user prompt is: {user_prompt}, generate only the prompt and no other text, do not use any special characters or symbols or bullets i just need plain white text with no formatting."}]}
+            ]
+        }
+
+    # Make the API call only if a valid payload was created
+    if payload:
+        url = f"https://generativelanguage.googleapis.com/v1beta/models/{model}:generateContent?key={GEMINI_API_KEY}"
+        headers = {"Content-Type": "application/json"}
+
+        try:
+            response = requests.post(url, headers=headers, json=payload)
+            result = response.json()
+
+            # Extract the reply from the API response
+            if "candidates" in result and len(result["candidates"]) > 0:
+                candidate = result["candidates"][0]
+                if "content" in candidate and "parts" in candidate["content"] and len(candidate["content"]["parts"]) > 0:
+                    reply = candidate["content"]["parts"][0]["text"]
+
+                    # Normalize whitespace
+                    reply = reply.replace("\n", " ").strip()
+                    reply = re.sub(r'\s+', ' ', reply)
+        except (KeyError, IndexError, requests.exceptions.RequestException):
+            pass
+
+    return jsonify({"detailed_reply": reply})
+
 if __name__ == "__main__":
     app.run(debug=True)
