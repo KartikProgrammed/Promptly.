@@ -8,6 +8,8 @@ from dotenv import load_dotenv
 load_dotenv()
 
 app = Flask(__name__)
+handler = app
+
 from flask_cors import CORS
 CORS(app, origins=[
     "chrome-extension://*",
@@ -324,5 +326,3 @@ def math_reply():
             pass
 
     return jsonify({"math_reply": reply})
-
-handler = app
