@@ -1,0 +1,21 @@
+.image-area {
+    background: #fff;
+    border: 2px dashed #ccc;
+    border-radius: 8px;
+    padding: 8px;
+    text-align: center;
+    margin-top: 8px;
+    cursor: pointer;
+    transition: border-color 0.2s ease;
+  }
+  
+  .image-area:hover {
+    border-color: #0078d7;
+  }
+  
+  .image-area p {
+    font-size: 13px;
+    color: #666;
+    margin: 0;
+  }
+  

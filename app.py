@@ -4,11 +4,21 @@ import os
 import base64
 import re
 from dotenv import load_dotenv
-
+from flask_cors import CORS
 # Load environment variables from .env file
 load_dotenv()
 
 app = Flask(__name__)
+CORS(app, origins=[
+    "chrome-extension://*",
+    "http://127.0.0.1:5000",
+    "https://promptly-backend.vercel.app"
+])
+
+@app.route("/", methods=["GET"])
+def home():
+    return jsonify({"status": "Promptly backend running"})
+
 
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
 
@@ -316,4 +326,4 @@ def math_reply():
     return jsonify({"math_reply": reply})
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run()

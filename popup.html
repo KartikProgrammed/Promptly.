@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Promptly</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <div class="container">
+    <h2>Promptly.</h2>
+
+    <textarea id="promptInput" placeholder="Enter your prompt..."></textarea>
+
+    <div class="image-area" id="imageArea">
+      <p id="imageText">📸 Paste or click to upload an image</p>
+      <input type="file" id="imageInput" accept="image/*" hidden>
+      <img id="preview" alt="" style="display:none; max-width:100%; border-radius:6px; margin-top:6px;">
+    </div>
+
+    <div class="controls">
+      <select id="modeSelect">
+        <option value="rewrite">General Rewrite</option>
+        <option value="concise">Concise</option>
+        <option value="detailed">Detailed</option>
+        <option value="math">Math</option>
+      </select>
+      <button id="sendBtn">Send</button>
+    </div>
+
+    <div id="responseContainer" class="response">Your response will appear here...</div>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>
