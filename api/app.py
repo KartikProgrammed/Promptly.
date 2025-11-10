@@ -125,7 +125,7 @@ def concise_reply():
             "contents": [
                 {
                     "parts": [
-                        {"text": f"Rewrite the following user prompt to be more detailed, descriptive, and effective for an AI assistant. The rewritten prompt should be a single, continuous sentence without bullet points or newlines and should direct the AI assistant to give a concise and to the point answer. Use the attached image as context. The original prompt is: {user_prompt}, do not use any special characters or symbols or bullets i just need plain white text with no formatting."},
+                        {"text": f"Rewrite the following user prompt to be more detailed, descriptive, and effective for an AI assistant. The rewritten prompt should be a single, continuous sentence without bullet points or newlines and should direct the AI assistant to give a concise and to the point answer. Use the attached image as context. The original prompt is: {user_prompt}, do not use any special characters or symbols or bullets i just need plain white text with no formatting. IMPORTANT: Provide ONLY the rewritten prompt and absolutely nothing else—no introductory phrases, concluding remarks, headers, footers, or explanatory text whatsoever."},
                         {
                             "inlineData": {
                                 "mimeType": mime_type,
@@ -145,7 +145,7 @@ def concise_reply():
         # Construct the text-only payload
         payload = {
             "contents": [
-                {"role": "user", "parts": [{"text": f"Analyze the provided original user prompt, which is '{user_prompt}', and generate a substantially enhanced version that is significantly more detailed, vividly descriptive, and demonstrably effective for an AI assistant's execution, ensuring the entire revised output is structured as a single, uninterrupted, continuous sentence that strictly avoids any form of line breaks, enumeration, or bullet points."}]}
+                {"role": "user", "parts": [{"text": f"Rewrite the following user prompt to be more concise, on spot, and effective for an AI assistant. The rewritten prompt should be a single, continuous sentence without bullet points or newlines. The original prompt is: {user_prompt}"}]}
             ]
         }
 
@@ -320,4 +320,5 @@ def math_reply():
             pass
 
     return jsonify({"math_reply": reply})
-app = app
+if __name__ == "__main__":
+    app.run(debug=True)
