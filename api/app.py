@@ -320,3 +320,4 @@ def math_reply():
             pass
 
     return jsonify({"math_reply": reply})
+app = app
