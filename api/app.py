@@ -6,14 +6,14 @@ import re
 # Load environment variables from .env file
 
 app = Flask(__name__)
-handler = app
+
 
 from flask_cors import CORS
 CORS(app, resources={r"/*": {"origins": "*"}})
 
 @app.route("/", methods=["GET"])
 def home():
-    return jsonify({"status": "Promptly backend running"})
+    return "Botaniq webhook is live!"
 
 
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
