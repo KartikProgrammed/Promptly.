@@ -1,14 +1,14 @@
-from flask import Flask, request, jsonify
+from flask import Flask, jsonify, request
 import requests
 import os
 import base64
 import re
 from dotenv import load_dotenv
-from flask_cors import CORS
 # Load environment variables from .env file
 load_dotenv()
 
 app = Flask(__name__)
+from flask_cors import CORS
 CORS(app, origins=[
     "chrome-extension://*",
     "http://127.0.0.1:5000",
