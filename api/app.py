@@ -9,11 +9,7 @@ app = Flask(__name__)
 handler = app
 
 from flask_cors import CORS
-CORS(app, origins=[
-    "chrome-extension://*",
-    "http://127.0.0.1:5000",
-    "https://promptly-orcin.vercel.app"
-])
+CORS(app, resources={r"/*": {"origins": "*"}})
 
 @app.route("/", methods=["GET"])
 def home():
