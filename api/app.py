@@ -325,5 +325,4 @@ def math_reply():
 
     return jsonify({"math_reply": reply})
 
-if __name__ == "__main__":
-    app.run()
+handler = app
