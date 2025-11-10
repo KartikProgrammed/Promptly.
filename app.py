@@ -12,7 +12,7 @@ app = Flask(__name__)
 CORS(app, origins=[
     "chrome-extension://*",
     "http://127.0.0.1:5000",
-    "https://promptly-backend.vercel.app"
+    "https://promptly-orcin.vercel.app"
 ])
 
 @app.route("/", methods=["GET"])
