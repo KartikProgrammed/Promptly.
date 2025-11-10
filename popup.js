@@ -65,13 +65,13 @@ sendBtn.addEventListener("click", async () => {
       formData.append("prompt", prompt);
       formData.append("image", selectedImage);
 
-      res = await fetch(`https://YOUR_BACKEND_URL/${mode}`, {
+      res = await fetch(`https://promptly-orcin.vercel.app/${mode}`, {
         method: "POST",
         body: formData
       });
     } else {
       // Text-only prompt
-      res = await fetch(`https://YOUR_BACKEND_URL/${mode}`, {
+      res = await fetch(`https://promptly-orcin.vercel.app/${mode}`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ prompt })
