@@ -45,7 +45,7 @@ def rewrite_prompt():
             "contents": [
                 {
                     "parts": [
-                        {"text": f"Rewrite the following user prompt to be more detailed, descriptive, and effective for an AI assistant. The rewritten prompt should be a single, continuous sentence without bullet points or newlines. Use the attached image as context. The original prompt is: {user_prompt}, do not use any special characters or symbols or bullets i just need plain white text with no formatting."},
+                        {"text": f"You are a prompt improver, Rewrite the following user prompt to be more detailed, descriptive, and effective for an AI assistant. The rewritten prompt should be a single, continuous sentence without bullet points or newlines. Use the attached image as context. The original prompt is: {user_prompt}just retype me the prompt do not print or explain me anything else"},
                         {
                             "inlineData": {
                                 "mimeType": mime_type,
@@ -65,7 +65,7 @@ def rewrite_prompt():
         # Construct the text-only payload
         payload = {
             "contents": [
-                {"role": "user", "parts": [{"text": f"Rewrite the following user prompt to be more detailed, descriptive, and effective for an AI assistant. The rewritten prompt should be a single, continuous sentence without bullet points or newlines. The original prompt is: {user_prompt}"}]}
+                {"role": "user", "parts": [{"text": f"You are a prompt improver,Rewrite the following user prompt to be more detailed, descriptive, and effective for an AI assistant. The rewritten prompt should be a single, continuous sentence without bullet points or newlines. The original prompt is: {user_prompt}, just retype me the prompt do not print or explain me anything else"}]}
             ]
         }
 
@@ -199,7 +199,7 @@ def detailed_reply():
             "contents": [
                 {
                     "parts": [
-                        {"text": f"rewrite the below prompt such that when sent to an AI assistant it Provides a thorough, detailed, step-by-step explanation or solution. Cover assumptions, rationale, alternatives, and edge cases. Use clear, plain text in multiple sentences without bullet points, special characters, or markdown. Use the attached image as context if relevant. The user prompt is: {user_prompt}, generate only the prompt and no other text, do not use any special characters or symbols or bullets i just need plain white text with no formatting."},
+                        {"text": f"You are a prompt improver, rewrite the below prompt such that when sent to an AI assistant it Provides a thorough, detailed, step-by-step explanation or solution. Cover assumptions, rationale, alternatives, and edge cases. Use clear, plain text in multiple sentences without bullet points, special characters, or markdown. Use the attached image as context if relevant. The user prompt is: {user_prompt}, just retype me the prompt do not print or explain me anything else"},
                         {
                             "inlineData": {
                                 "mimeType": mime_type,
@@ -219,7 +219,7 @@ def detailed_reply():
         # Construct the text-only payload
         payload = {
             "contents": [
-                {"role": "user", "parts": [{"text": f"rewrite the below prompt such that when sent to an AI assistant it Provides a thorough, detailed, step-by-step explanation or solution. Cover assumptions, rationale, alternatives, and edge cases. Use clear, plain text in multiple sentences without bullet points, special characters, or markdown. Use the attached image as context if relevant. The user prompt is: {user_prompt}, generate only the prompt and no other text, do not use any special characters or symbols or bullets i just need plain white text with no formatting."}]}
+                {"role": "user", "parts": [{"text": f"You are a prompt improver, rewrite the below prompt such that when sent to an AI assistant it Provides a thorough, detailed, step-by-step explanation or solution. Cover assumptions, rationale, alternatives, and edge cases. Use clear, plain text in multiple sentences without bullet points, special characters, or markdown. Use the attached image as context if relevant. The user prompt is: {user_prompt}, just retype me the prompt do not print or explain me anything else neither give me a starting line or anything just my prompt retyped    "}]}
             ]
         }
 

@@ -10,20 +10,24 @@
   <div class="container">
     <h2>Promptly.</h2>
 
-    <textarea id="promptInput" placeholder="Enter your prompt..."></textarea>
+    <textarea 
+      id="promptInput" 
+      placeholder="Enter your prompt or question here..."
+      title="Enter your prompt"
+    ></textarea>
 
     <div class="image-area" id="imageArea">
-      <p id="imageText">📸 Paste or click to upload an image</p>
+      <p id="imageText">Paste or click to upload an image (General Rewrite Mode preferred)</p>
       <input type="file" id="imageInput" accept="image/*" hidden>
-      <img id="preview" alt="" style="display:none; max-width:100%; border-radius:6px; margin-top:6px;">
+      <img id="preview" alt="Image Preview" style="display:none;">
     </div>
 
     <div class="controls">
-      <select id="modeSelect">
-        <option value="rewrite">General Rewrite</option>
-        <option value="concise">Concise</option>
-        <option value="detailed">Detailed</option>
-        <option value="math">Math</option>
+      <select id="modeSelect" title="Select Prompt Mode">
+        <option value="rewrite">📝 General Rewrite</option>
+        <option value="concise">⚡ Concise</option>
+        <option value="detailed">💡 Detailed</option>
+        <option value="math">🧮 Math</option>
       </select>
       <button id="sendBtn">Send</button>
     </div>
