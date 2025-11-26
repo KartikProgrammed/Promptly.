@@ -11,7 +11,23 @@
         "128": "icons/icon128.png"
       }
     },
-    "permissions": ["activeTab", "scripting","https://promptly-orcin.vercel.app/*"],
+    "background": {
+    "service_worker": "background.js"
+    },
+    "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["content.js"],
+      "run_at": "document_end"
+    }
+    ],
+      "permissions": [
+      "contextMenus", 
+      "activeTab"
+    ],
+    "host_permissions": [
+      "https://promptly-orcin.vercel.app/*"
+    ],
     "icons": {
       "16": "icons/icon16.png",
       "48": "icons/icon48.png",
