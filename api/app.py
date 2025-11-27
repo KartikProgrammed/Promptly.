@@ -33,7 +33,7 @@ def rewrite_prompt():
         # Multimodal prompt: an image and text prompt
         image_file = request.files['image']
         user_prompt = request.form.get("prompt", "")
-        model = "gemini-2.5-flash-preview-05-20"
+        model = "gemini-2.5-flash"
         
         # Read the image data and encode it in base64
         image_data = image_file.read()
@@ -113,7 +113,7 @@ def concise_reply():
         # Multimodal prompt: an image and text prompt
         image_file = request.files['image']
         user_prompt = request.form.get("prompt", "")
-        model = "gemini-2.5-flash-preview-05-20"
+        model = "gemini-2.5-flash"
 
         # Read the image data and encode it in base64
         image_data = image_file.read()
@@ -187,7 +187,7 @@ def detailed_reply():
         # Multimodal prompt: an image and text prompt
         image_file = request.files['image']
         user_prompt = request.form.get("prompt", "")
-        model = "gemini-2.5-flash-preview-05-20"
+        model = "gemini-2.5-flash"
 
         # Read the image data and encode it in base64
         image_data = image_file.read()
@@ -262,7 +262,7 @@ def math_reply():
         # Multimodal prompt: an image and text prompt
         image_file = request.files['image']
         user_prompt = request.form.get("prompt", "")
-        model = "gemini-2.5-flash-preview-05-20"
+        model = "gemini-2.5-flash"
 
         # Read the image data and encode it in base64
         image_data = image_file.read()
