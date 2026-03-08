@@ -320,5 +320,236 @@ def math_reply():
             pass
 
     return jsonify({"math_reply": reply})
+
+
+@app.route("/video", methods=["POST"])
+def video_reply():
+    """
+    Returns a video-generation-oriented prompt that, when sent to a video
+    model (e.g., VEO3), guides it to create a rich, coherent video based on
+    the user's idea. Accepts JSON or form-data (optional reference image).
+    """
+    reply = "Sorry, could not generate a video prompt."
+    payload = None
+
+    # Check if the request contains an image file
+    if 'image' in request.files:
+        # Multimodal prompt: an image and text prompt
+        image_file = request.files['image']
+        user_prompt = request.form.get("prompt", "")
+        model = "gemini-2.5-flash"
+
+        # Read the image data and encode it in base64
+        image_data = image_file.read()
+        base64_image = base64.b64encode(image_data).decode('utf-8')
+        mime_type = image_file.mimetype
+
+        # Construct the multimodal payload for the Gemini API
+        payload = {
+            "contents": [
+                {
+                    "parts": [
+                        {
+                            "text": (
+                                "Rewrite the below prompt such that when sent to a video "
+                                "generation model like VEO3 it will produce a highly detailed, "
+                                "coherent video description including subject, setting, actions, "
+                                "camera movements, pacing, duration, aspect ratio, style, and mood. "
+                                "The same image the user is sending with this request will also be "
+                                "provided to the VEO3 model; make sure the rewritten prompt clearly "
+                                "tells the video model to use that attached image as visual reference "
+                                "for characters, environment, or style if relevant. The user prompt is: "
+                                f"{user_prompt}, generate only the rewritten prompt and no other "
+                                "text, do not use any special characters or symbols or bullets, "
+                                "i just need plain text with no formatting."
+                            )
+                        },
+                        {
+                            "inlineData": {
+                                "mimeType": mime_type,
+                                "data": base64_image,
+                            }
+                        },
+                    ]
+                }
+            ]
+        }
+    else:
+        # Text-only prompt: JSON payload
+        model = "gemma-3-27b-it"
+        data = request.json
+        user_prompt = data.get("prompt", "")
+
+        # Construct the text-only payload
+        payload = {
+            "contents": [
+                {
+                    "role": "user",
+                    "parts": [
+                        {
+                            "text": (
+                                "Rewrite the below prompt such that when sent to a video "
+                                "generation model like VEO3 it will produce a highly detailed, "
+                                "coherent video description including subject, setting, actions, "
+                                "camera movements, pacing, duration, aspect ratio, style, and mood. "
+                                "The user prompt is: "
+                                f"{user_prompt}, generate only the rewritten prompt and no other "
+                                "text, do not use any special characters or symbols or bullets, "
+                                "i just need plain text with no formatting."
+                            )
+                        }
+                    ],
+                }
+            ]
+        }
+
+    # Make the API call only if a valid payload was created
+    if payload:
+        url = (
+            f"https://generativelanguage.googleapis.com/v1beta/models/"
+            f"{model}:generateContent?key={GEMINI_API_KEY}"
+        )
+        headers = {"Content-Type": "application/json"}
+
+        try:
+            response = requests.post(url, headers=headers, json=payload)
+            result = response.json()
+
+            # Extract the reply from the API response
+            if "candidates" in result and len(result["candidates"]) > 0:
+                candidate = result["candidates"][0]
+                if (
+                    "content" in candidate
+                    and "parts" in candidate["content"]
+                    and len(candidate["content"]["parts"]) > 0
+                ):
+                    reply = candidate["content"]["parts"][0]["text"]
+
+                    # Normalize whitespace
+                    reply = reply.replace("\n", " ").strip()
+                    reply = re.sub(r"\s+", " ", reply)
+        except (KeyError, IndexError, requests.exceptions.RequestException):
+            pass
+
+    return jsonify({"video_reply": reply})
+
+
+@app.route('/code', methods=["POST"])
+def code_generation():
+    """
+    Returns a code-generation-oriented prompt that, when sent to a coding
+    assistant, asks it to write new code or suggest edits and improvements to
+    any code snippet provided in the prompt. Accepts JSON or form-data
+    (optional reference image, e.g. screenshot of code or UI).
+    """
+    reply = "Sorry, could not generate a code prompt."
+    payload = None
+
+    # Check if the request contains an image file
+    if 'image' in request.files:
+        # Multimodal prompt: an image and text prompt
+        image_file = request.files['image']
+        user_prompt = request.form.get("prompt", "")
+        model = "gemini-2.5-flash"
+
+        # Read the image data and encode it in base64
+        image_data = image_file.read()
+        base64_image = base64.b64encode(image_data).decode('utf-8')
+        mime_type = image_file.mimetype
+
+        # Construct the multimodal payload for the Gemini API
+        payload = {
+            "contents": [
+                {
+                    "parts": [
+                        {
+                            "text": (
+                                "Rewrite the below prompt such that when sent to a coding "
+                                "assistant it will either generate high-quality, production-ready "
+                                "code in the requested language or propose clear edits, "
+                                "refactorings, and improvements to any code snippet included in "
+                                "the prompt. The assistant should preserve existing style and "
+                                "architecture where appropriate, explain non-obvious changes, and "
+                                "consider performance, security, and readability. Use the attached "
+                                "image as reference (e.g., screenshot of code or UI) if relevant. "
+                                "The user prompt is: "
+                                f"{user_prompt}, generate only the rewritten prompt and no other "
+                                "text, do not use any special characters or symbols or bullets, "
+                                "i just need plain text with no formatting."
+                            )
+                        },
+                        {
+                            "inlineData": {
+                                "mimeType": mime_type,
+                                "data": base64_image,
+                            }
+                        },
+                    ]
+                }
+            ]
+        }
+    else:
+        # Text-only prompt: JSON payload
+        model = "gemma-3-27b-it"
+        data = request.json
+        user_prompt = data.get("prompt", "")
+
+        # Construct the text-only payload
+        payload = {
+            "contents": [
+                {
+                    "role": "user",
+                    "parts": [
+                        {
+                            "text": (
+                                "Rewrite the below prompt such that when sent to a coding "
+                                "assistant it will either generate high-quality, production-ready "
+                                "code in the requested language or propose clear edits, "
+                                "refactorings, and improvements to any code snippet included in "
+                                "the prompt. The assistant should preserve existing style and "
+                                "architecture where appropriate, explain non-obvious changes, and "
+                                "consider performance, security, and readability. The user "
+                                "prompt is: "
+                                f"{user_prompt}, generate only the rewritten prompt and no other "
+                                "text, do not use any special characters or symbols or bullets, "
+                                "i just need plain text with no formatting."
+                            )
+                        }
+                    ],
+                }
+            ]
+        }
+
+    # Make the API call only if a valid payload was created
+    if payload:
+        url = (
+            f"https://generativelanguage.googleapis.com/v1beta/models/"
+            f"{model}:generateContent?key={GEMINI_API_KEY}"
+        )
+        headers = {"Content-Type": "application/json"}
+
+        try:
+            response = requests.post(url, headers=headers, json=payload)
+            result = response.json()
+
+            # Extract the reply from the API response
+            if "candidates" in result and len(result["candidates"]) > 0:
+                candidate = result["candidates"][0]
+                if (
+                    "content" in candidate
+                    and "parts" in candidate["content"]
+                    and len(candidate["content"]["parts"]) > 0
+                ):
+                    reply = candidate["content"]["parts"][0]["text"]
+
+                    # Normalize whitespace
+                    reply = reply.replace("\n", " ").strip()
+                    reply = re.sub(r"\s+", " ", reply)
+        except (KeyError, IndexError, requests.exceptions.RequestException):
+            pass
+
+    return jsonify({"code_reply": reply})
+
+
 if __name__ == "__main__":
     app.run(debug=True)
